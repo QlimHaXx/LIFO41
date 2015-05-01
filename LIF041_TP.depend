@@ -1,0 +1,67 @@
+# depslib dependency file v1.0
+1427360547 source:/home/etu/j/p1107741/LIFO41_TP/Animation.cpp
+	"opengl.h"
+	"Vec3f.h"
+	<time.h>
+	"Animation.h"
+	<cassert>
+
+1427360556 /home/etu/j/p1107741/LIFO41_TP/opengl.h
+	<GL/gl.h>
+	<GL/glu.h>
+	"glut-3.7.6-bin_win/glut.h"
+	<GL/glut.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
+1427360548 /home/etu/j/p1107741/LIFO41_TP/glut-3.7.6-bin_win/glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1427360547 /home/etu/j/p1107741/LIFO41_TP/Vec3f.h
+
+1427360547 /home/etu/j/p1107741/LIFO41_TP/Animation.h
+	"Vec3f.h"
+
+1429776881 source:/home/etu/j/p1107741/LIFO41_TP/Image.cpp
+	<cstdlib>
+	<cassert>
+	<cstdio>
+	"Image.h"
+
+1427360549 /home/etu/j/p1107741/LIFO41_TP/Image.h
+
+1427360547 source:/home/etu/j/p1107741/LIFO41_TP/opengl.cpp
+	"opengl.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"Vec3f.h"
+	"Image.h"
+	"Scene.h"
+	"Camera.h"
+	"Animation.h"
+
+1428575175 /home/etu/j/p1107741/LIFO41_TP/Scene.h
+	"Animation.h"
+	"Image.h"
+
+1427360556 /home/etu/j/p1107741/LIFO41_TP/Camera.h
+	"Vec3f.h"
+
+1429784544 source:/home/etu/j/p1107741/LIFO41_TP/Scene.cpp
+	"Scene.h"
+	<time.h>
+	<GL/gl.h>
+	"opengl.h"
+
+1427360547 source:/home/etu/j/p1107741/LIFO41_TP/Vec3f.cpp
+	"Vec3f.h"
+	<math.h>
+	<cstdio>
+
