@@ -1,0 +1,166 @@
+#include "Scene.h"
+#include <GL/gl.h>
+#include "opengl.h"
+
+void draw_axes()
+{
+    glLineWidth(5);
+    glBegin( GL_LINES );
+
+    glColor3f( 1.f, 0.f, 0.f);
+    glVertex3f( 0.f, 0.f, 0.f);
+    glVertex3f( 1.f, 0.f, 0.f);
+
+    glColor3f( 0.f, 1.f, 0.f);
+    glVertex3f( 0.f, 0.f, 0.f);
+    glVertex3f( 0.f, 1.f, 0.f);
+
+    glColor3f( 0.f, 0.f, 1.f);
+    glVertex3f( 0.f, 0.f, 0.f);
+    glVertex3f( 0.f, 0.f, 1.f);
+
+    glEnd();
+}
+
+
+void draw_grid()
+{
+    int i;
+    glLineWidth(1);
+    glColor3f( 1.f, 1.f, 1.f);
+
+    glPushMatrix();
+    glTranslatef( -5, 0, -5);
+
+    glBegin( GL_LINES );
+
+    for (i=0;i<=10;++i)
+    {
+        glVertex3f( i, 0, 0);
+        glVertex3f( i, 0, 10);
+    }
+
+    for (i=0;i<=10;++i)
+    {
+        glVertex3f( 0, 0, i);
+        glVertex3f( 10, 0, i);
+    }
+
+    glEnd();
+    glPopMatrix();
+}
+
+
+
+void draw_cube()
+{
+    static float pt[8][3] = { {0,0,0}, {1,0,0}, {1,0,1}, {0,0,1}, {0,1,0}, {1,1,0}, {1,1,1}, {0,1,1} };
+    static int f[6][4] = { {0,1,2,3}, {5,4,7,6}, {1,5,6,2}, {0,3,7,4}, {3,2,6,7}, {0,4,5,1} };
+    static float n[6][3] = { {0,-1,0}, {0,1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
+    static float uv[6][4][2] = { { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} } };
+    int i,j;
+
+    glTranslatef(-0.5,-0.5,-0.5);
+    glBegin(GL_QUADS);
+    for (i=0;i<6;i++)
+    {
+        glNormal3f( n[ i ][0], n[ i ][1], n[ i ][2] );
+        for (j=0;j<4;j++)
+        {
+            glTexCoord2f( uv[i][j][0], uv[i][j][1] );
+            glVertex3f( pt[ f[i][j] ][0], pt[ f[i][j] ][1], pt[ f[i][j] ][2] );
+        }
+    }
+    glEnd();
+}
+
+
+
+void draw_sphere()
+{
+}
+
+
+
+void draw_cylinder()
+{
+}
+
+
+
+void draw_cone()
+{
+}
+
+
+
+
+
+
+void sceneInit(Scene& sc)
+{
+    animInit( sc.anim, "data/anim1.ani" );
+    sc.tex_papillon = LoadGLTexture("data/papillon.ppm", true, 230, 230, 230, LOADGLTEX_GREATER);
+}
+
+
+void sceneDraw(const Scene& sc)
+{
+    // A MODIFIER : CETTE FONCTION AFFICHE LA SCENE PRINCIPALE
+
+
+    // Mon 1er cube
+    glColor3f( 1, 1, 1);
+    glBindTexture( GL_TEXTURE_2D, sc.tex_papillon);
+    glPushMatrix();	// sauvegarde la transformation courante
+    glTranslatef( -2, 2, 0);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture( GL_TEXTURE_2D, sc.tex_papillon );
+    draw_cube();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();		// récupère la transformation sauvegardée avant
+
+
+    glPushMatrix();
+    glColor3f( 1,1,1);
+    glEnable(GL_TEXTURE_2D);
+    glScalef( 10,10,10);
+    glBegin( GL_QUADS );
+    glNormal3f( 0,1,0);
+    glTexCoord2f( 0,0);
+    glVertex3f( -1, 0, -1);
+    glTexCoord2f( 1,0);
+    glVertex3f( 1, 0, -1);
+    glTexCoord2f( 1,1);
+    glVertex3f( 1, 0, 1);
+    glTexCoord2f( 0,1);
+    glVertex3f( -1, 0, 1);
+    glEnd();
+    glPopMatrix();
+
+
+    // **************** FORME DE BASE ***********************/
+    glPushMatrix();
+    glTranslatef( 0, 2, 0);
+    glColor3f( 1, 0, 0);
+    draw_cone();
+
+    glPushMatrix();
+    glTranslatef( 3, 0, 0);
+    glColor3f( 1, 1, 0);
+    draw_cylinder();
+
+    glPushMatrix();
+    glTranslatef( 3, 0, 0);
+    glColor3f( 1, 0, 1);
+    draw_sphere();
+
+    glPopMatrix();
+    glPopMatrix();
+    glPopMatrix();
+}
