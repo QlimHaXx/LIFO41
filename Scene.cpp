@@ -1,0 +1,545 @@
+#include "Scene.h"
+#include <time.h>
+#include <GL/gl.h>
+#include "opengl.h"
+
+void draw_axes()
+{
+    glLineWidth(5);
+    glBegin( GL_LINES );
+
+    glColor3f( 1.f, 0.f, 0.f);
+    glVertex3f( 0.f, 0.f, 0.f);
+    glVertex3f( 1.f, 0.f, 0.f);
+
+    glColor3f( 0.f, 1.f, 0.f);
+    glVertex3f( 0.f, 0.f, 0.f);
+    glVertex3f( 0.f, 1.f, 0.f);
+
+    glColor3f( 0.f, 0.f, 1.f);
+    glVertex3f( 0.f, 0.f, 0.f);
+    glVertex3f( 0.f, 0.f, 1.f);
+
+    glEnd();
+}
+
+void draw_grid()
+{
+    int i;
+    glLineWidth(1);
+    glColor3f( 1.f, 1.f, 1.f);
+
+    glPushMatrix();
+    glTranslatef( -5, 0, -5);
+
+    glBegin( GL_LINES );
+
+    for (i=0;i<=10;++i)
+    {
+        glVertex3f( i, 0, 0);
+        glVertex3f( i, 0, 10);
+    }
+
+    for (i=0;i<=10;++i)
+    {
+        glVertex3f( 0, 0, i);
+        glVertex3f( 10, 0, i);
+    }
+
+    glEnd();
+    glPopMatrix();
+}
+
+void draw_cube()
+{
+    static float pt[8][3] = { {0,0,0}, {1,0,0}, {1,0,1}, {0,0,1}, {0,1,0}, {1,1,0}, {1,1,1}, {0,1,1} };
+    static int f[6][4] = { {0,1,2,3}, {5,4,7,6}, {1,5,6,2}, {0,3,7,4}, {3,2,6,7}, {0,4,5,1} };
+    static float n[6][3] = { {0,-1,0}, {0,1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
+    static float uv[6][4][2] = { { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} },
+                                 { {0,0}, {1,0}, {1,1}, {0,1} } };
+    int i,j;
+
+    glTranslatef(-0.5,-0.5,-0.5);
+    glBegin(GL_QUADS);
+    for (i=0;i<6;i++)
+    {
+        glNormal3f( n[ i ][0], n[ i ][1], n[ i ][2] );
+        for (j=0;j<4;j++)
+        {
+            glTexCoord2f( uv[i][j][0], uv[i][j][1] );
+            glVertex3f( pt[ f[i][j] ][0], pt[ f[i][j] ][1], pt[ f[i][j] ][2] );
+        }
+    }
+    glEnd();
+}
+
+void draw_cube_map()
+{
+    static float pt[8][3] = { {0,0,0}, {1,0,0}, {1,0,1}, {0,0,1}, {0,1,0}, {1,1,0}, {1,1,1}, {0,1,1} };
+    static int f[6][4] = { {0,1,2,3}, {5,4,7,6}, {1,5,6,2}, {0,3,7,4}, {3,2,6,7}, {0,4,5,1} };
+    static float n[6][3] = { {0,-1,0}, {0,1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
+    static float uv[6][4][2] = { { {1.0/2,1.0/3}, {1.0/4,1.0/3}, {1.0/4,0}, {1.0/2,0} }, /* face du bas */
+                                 { {1.0/4,2.0/3}, {1.0/2,2.0/3}, {1.0/2,1}, {1.0/4,1} }, /* face du haut */
+                                 { {1.0/4,1.0/3}, {1.0/4,2.0/3}, {0,2.0/3}, {0/4,1.0/3} }, /* face DR */
+                                 { {1.0/2,1.0/3}, {3.0/4,1.0/3}, {3.0/4,2.0/3}, {1.0/2,2.0/3} }, /* face GA */
+                                 { {3.0/4,1.0/3}, {1,1.0/3}, {1,2.0/3}, {3.0/4,2.0/3} }, /* face arriere */
+                                 { {1.0/2,1.0/3}, {1.0/2,2.0/3}, {1.0/4,2.0/3}, {1.0/4,1.0/3} } }; /* face avant */
+    int i,j;
+
+    glTranslatef(-0.5,-0.5,-0.5);
+    glBegin(GL_QUADS);
+    for (i=0;i<6;i++)
+    {
+        glNormal3f(- n[ i ][0], - n[ i ][1], - n[ i ][2] );
+        for (j=0;j<4;j++)
+        {
+            glTexCoord2f( uv[i][j][0], uv[i][j][1] );
+            glVertex3f( pt[ f[i][j] ][0], pt[ f[i][j] ][1], pt[ f[i][j] ][2] );
+        }
+    }
+    glEnd();
+}
+
+void draw_sphere()
+{
+    int i,j;
+    float a,a2,b;
+    int N = 20;
+    for(i = 0;i < N; i++)
+    {
+        glBegin(GL_TRIANGLE_STRIP);
+        a = M_PI * i / N;
+        a2 = M_PI * (i + 1) / N;
+        for(j = 0;j <= N; j++)
+        {
+            b = 2.0 * M_PI * j / N;
+            glNormal3f(sin(a)*cos(b),cos(a),sin(a)*sin(b));
+            glVertex3f(sin(a)*cos(b),cos(a),sin(a)*sin(b));
+            glNormal3f(sin(a2)*cos(b),cos(a2),sin(a2)*sin(b));
+            glVertex3f(sin(a2)*cos(b),cos(a2),sin(a2)*sin(b));
+        }
+        glEnd();
+    }
+
+}
+
+void draw_cylinder()
+{
+    int i;
+
+    glBegin(GL_TRIANGLE_STRIP);
+    int N=20;
+    float a;
+    for(i=0;i<=N;i++)
+    {
+        a=2.0*i*M_PI/N;
+        glNormal3f(cos(a),0,sin(a));
+        glVertex3f(cos(a),0,sin(a));
+        glNormal3f(cos(a),0,sin(a));
+        glVertex3f(cos(a),1,sin(a));
+    }
+    glEnd();
+
+    glBegin(GL_TRIANGLE_FAN);
+    glNormal3f(0,1,0);
+    glVertex3f(0,1,0);
+    for(i=0;i<=N;i++)
+    {
+        a=2.0*i*M_PI/N;
+        glNormal3f(0,1,0);
+        glVertex3f(cos(a),1,sin(a));
+    }
+    glEnd();
+
+    glBegin(GL_TRIANGLE_FAN);
+    glNormal3f(0,-1,0);
+    glVertex3f(0,0,0);
+    for(i=0;i<=N;i++)
+    {
+        a=2.0*i*M_PI/N;
+        glNormal3f(0,-1,0);
+        glVertex3f(cos(a),0,sin(a));
+    }
+    glEnd();
+
+}
+
+void draw_cone()
+{
+    int i;
+
+    glBegin(GL_TRIANGLES);
+    int N=20;
+    float a;
+    for(i=0;i<=N;i++)
+    {
+        a=2.0*i*M_PI/N;
+        glNormal3f(0,0,0);
+        glVertex3f(0,0,0);
+        glNormal3f(cos(a),0,sin(a));
+        glVertex3f(cos(a),1,sin(a));
+    }
+    glEnd();
+
+    glBegin(GL_TRIANGLE_FAN);
+    glNormal3f(0,1,0);
+    glVertex3f(0,1,0);
+    for(i=0;i<=N;i++)
+    {
+        a=2.0*i*M_PI/N;
+        glNormal3f(0,1,0);
+        glVertex3f(cos(a),1,sin(a));
+    }
+    glEnd();
+
+}
+
+void Normal(const Image& im, int i, int j)
+{
+    Vec3f G,D,H,B,GD,BH,N;
+    vecInit(G,i-1,getPix(im,i-1,j,0),j);
+    vecInit(D,i+1,getPix(im,i+1,j,0),j);
+    vecInit(B,i,getPix(im,i,j-1,0),j+1);
+    vecInit(H,i,getPix(im,i,j+1,0),j-1);
+    vecSub(GD,D,G);
+    vecSub(BH,H,B);
+    vecCross(N,GD,BH);
+    glNormal3f(N.x,N.y,N.z);
+}
+
+void draw_arbre (){
+    glPushMatrix();
+    glBegin( GL_QUADS );
+    glNormal3f( 0,1,0);
+    glTexCoord2f( 1,1);
+    glVertex3f( 0.5, 1, 0);
+    glTexCoord2f( 0, 1);
+    glVertex3f( -0.5, 1, 0);
+    glTexCoord2f( 0,0);
+    glVertex3f( -0.5, 0, 0);
+    glTexCoord2f( 1,0);
+    glVertex3f( 0.5, 0, 0);
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glNormal3f(0,1,0);
+    glTexCoord2f(1,1);
+    glVertex3f(0,1,-0.5);
+    glTexCoord2f(0,1);
+    glVertex3f(0,1,0.5);
+    glTexCoord2f(0,0);
+    glVertex3f(0,0,0.5);
+    glTexCoord2f(1,0);
+    glVertex3f(0,0,-0.5);
+    glEnd();
+    glPopMatrix();
+}
+
+void DessineTerrain(const Image &ter)
+{
+    int i, j;
+    glPushMatrix();
+    glScalef(1,0.1,1);
+    glTranslatef(-100,-200,-100);
+    for(i = 1;i<imGetDimX(ter) - 2;i++)
+    {
+        glBegin(GL_TRIANGLE_STRIP);
+        for(j = 1;j < imGetDimY(ter) - 1; j++)
+        {
+            glTexCoord2f(((float)i) /imGetDimX(ter), ((float)j) /imGetDimY(ter));
+            Normal(ter,i,j);
+            glVertex3f(i,getPix(ter,i,j,0),j);
+            glTexCoord2f(((float)(i + 1)) /imGetDimX(ter), ((float)j) /imGetDimY(ter));
+            Normal(ter,i+1,j);
+            glVertex3f(i+1,getPix(ter,i+1,j,0),j);
+
+        }
+        glEnd();
+    }
+    glPopMatrix();
+}
+
+void dessin_foret(const Image &ter){
+    int i, j;
+    int percent;
+    for(i = 0; i < imGetDimX(ter) - 1; i++){
+        for(j = 0; j < imGetDimY(ter) -1; j++){
+            if((float(getPix(ter, i, j, 0)))/20 > 2 && (float(getPix(ter, i, j, 0)))/20 < 6)
+            {
+                percent = rand()%100;
+                if(percent < 1){
+                    glPushMatrix();
+                    glTranslatef((float(i))/2, (float(getPix(ter, i, j, 0)))/20, (float(j))/2);
+                    glScalef(2,2,2);
+                    draw_arbre();
+                    glPopMatrix();
+                }
+            }
+        }
+    }
+}
+
+void draw_voiture(){
+    glPushMatrix(); // roue
+    glTranslatef(2,1,-2);
+    glRotatef(90,1,0,0);
+    glScalef(1,1,1);
+    glColor3f(0.2,0.2,0.2);
+    draw_cylinder();
+    glPopMatrix();
+
+    glPushMatrix(); // roue
+    glTranslatef(2,1,1);
+    glRotatef(90,1,0,0);
+    glScalef(1,1,1);
+    glColor3f(0.2,0.2,0.2);
+    draw_cylinder();
+    glPopMatrix();
+
+    glPushMatrix(); // roue
+    glTranslatef(-2,1,1);
+    glRotatef(90,1,0,0);
+    glScalef(1,1,1);
+    glColor3f(0.2,0.2,0.2);
+    draw_cylinder();
+    glPopMatrix();
+
+    glPushMatrix(); // roue
+    glTranslatef(-2,1,-2);
+    glRotatef(90,1,0,0);
+    glScalef(1,1,1);
+    glColor3f(0.2,0.2,0.2);
+    draw_cylinder();
+    glPopMatrix();
+
+    glPushMatrix(); // avant arriere
+    glTranslatef(0,1.5,0);
+    glScalef(6,1,2);
+    glColor3f(1,1,0);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); // base
+    glTranslatef(0,2,0);
+    glScalef(3,2,2);
+    glColor3f(1,1,0);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); // base
+    glTranslatef(-2,2,0);
+    glRotatef(90,0,1,0);
+    glScalef(0.1,2,2);
+    glColor3f(1,1,1);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); // base
+    glTranslatef(-2,2,-0.9);
+    glRotatef(90,0,1,0);
+    glScalef(0.1,2,2);
+    glColor3f(1,1,1);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); // base
+    glTranslatef(-2,2,0.9);
+    glRotatef(90,0,1,0);
+    glScalef(0.1,2,2);
+    glColor3f(1,1,1);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); // base
+    glTranslatef(2,2,0);
+    glRotatef(52,0,0,1);
+    glScalef(1,2,2);
+    glColor3f(1,1,1);
+    draw_cube();
+    glPopMatrix();
+}
+
+void draw_fly ()
+{
+    glPushMatrix(); //tronc
+    glTranslatef(0,0.5,0);
+    glScalef(1,5,1);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix(); //aile avant droite
+    glTranslatef(2.4,1,0);
+    glScalef(7,2,0.25);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); //réacteur droit
+    glTranslatef(2,1,0.375);
+    glScalef(0.25,1.5,0.3);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix(); //aile avant gauche
+    glTranslatef(-2.4,1,0);
+    glScalef(7,2,0.25);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); //réacteur gauche
+    glTranslatef(-2,1,0.375);
+    glScalef(0.25,1.5,0.3);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix(); //aileron
+    glTranslatef(0,-2.5,-1);
+    glScalef(0.2,0.8,0.7);
+    glRotatef(-15,1,0,0);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); //aile arrière droite
+    glTranslatef(1.1,-3,0);
+    glScalef(1.4,0.5,0.25);
+    glRotatef(0,1,0,0);
+    draw_cube();
+    glPopMatrix();
+
+    glPushMatrix(); //aile arrière gauche
+    glTranslatef(-1.1,-3,0);
+    glScalef(1.4,0.5,0.25);
+    glRotatef(0,1,0,0);
+    draw_cube();
+    glPopMatrix();
+
+}
+
+Vec3f calcul_pos(const Animation & ani, float t)
+{
+    glPushMatrix();
+    int te = t;
+    float r = t - te;
+    int tes = te + 1;
+    te = te % ani.nbp;
+    tes = tes % ani.nbp;
+    Vec3f P;
+    P.x = r * ani.P[tes].x + (1-r) * ani.P[tes].x;
+    P.y = r * ani.P[tes].y + (1-r) * ani.P[tes].y;
+    P.z = r * ani.P[tes].z + (1-r) * ani.P[tes].z;
+    glPopMatrix();
+    return P;
+}
+
+void draw_animfly (const Animation & ani)
+{
+    Vec3f P, X;
+    Vec3f PF, DIR;
+    float t;
+    float a;
+
+    t = temps();
+    P = calcul_pos(ani, t);
+    PF = calcul_pos(ani, t + 1);
+    vecInit(X,1,0,0);
+    vecSub(DIR, PF, P);
+    glPushMatrix();
+    glTranslatef(P.x, P.y, P.z);
+    glRotatef(-t * 5, 0, P.y, 0);
+    vecNormalize(DIR);
+    a = acos(vecDot(X, DIR));
+
+    if (DIR.z > 0){
+        a = -a;
+    }
+
+    glRotatef(a,0,1,0);
+    glRotatef(90,1,0,0);
+    glRotatef(-90,0,0,1);
+    glScalef(0.8,0.8,0.8);
+    glColor3f(1, 1, 1);
+    draw_fly();
+    glPopMatrix();
+}
+
+float alti(int i, int j, float t, int gx, int gz)
+{
+    float d, z; // d distance entre le point qu'on est en train d'afficher et la goutte
+
+    d = sqrt((gx - i) * (gx - i) + (gz - j) * (gz - j));
+    z = (cos(i * d + t) * 1)/(d + 1); //z : distance entre train de vague et 5 : hauteur de +5. On peut rajouter coeff * devant d pour accélerer la vitesse
+
+    return z;
+}
+
+void Dessine_eau(int DX, int DY) //copier normal du terrain et remplacer avec alti
+{
+    float t = temps();
+    int i,j;
+    for(i = 0;i <= DX; i++)
+    {
+        glBegin(GL_QUAD_STRIP);
+        for(j = 0;j <= DY; j++)
+        {
+            glNormal3f(0,1,0);
+            glVertex3f(i,alti(i,j,t,DX,DY),j);
+            glNormal3f(0,1,0);
+            glVertex3f(i + 1, alti(i + 1,j, t, DX, DY), j);
+        }
+        glEnd();
+    }
+}
+
+void sceneInit(Scene& sc)
+{
+    animInit(sc.anim, "data/anim1.ani");
+    sc.tex_arbre = LoadGLTexture("data/billboard/arbre.ppm", true, 100, 100, 100, LOADGLTEX_GREATER);
+    sc.tex_terrain = LoadGLTexture("data/terrain/terrain_new.ppm", false, 255, 255, 255, LOADGLTEX_GREATER);
+    sc.tex_map = LoadGLTexture("data/cubemap/skybox_big.ppm", false, 255, 255, 255, LOADGLTEX_GREATER);
+    imInitPPM(sc.terrain, "data/terrain/terrain_new_h.ppm");
+}
+
+void sceneDraw(const Scene& sc)
+{
+    srand(14);
+
+    glDisable(GL_TEXTURE_2D);
+    glPushMatrix();
+    draw_animfly(sc.anim);
+    glPopMatrix();
+
+    glBindTexture( GL_TEXTURE_2D, sc.tex_terrain);
+    glEnable(GL_TEXTURE_2D);
+    glPushMatrix();
+    DessineTerrain(sc.terrain);
+    glPopMatrix();
+
+
+    glBindTexture( GL_TEXTURE_2D, sc.tex_arbre);
+    glEnable(GL_TEXTURE_2D);
+    glPushMatrix();
+    glTranslatef(-100,-20,-100);
+    glScalef(2, 2, 2);
+    dessin_foret(sc.terrain);
+    glPopMatrix();
+
+    glBindTexture( GL_TEXTURE_2D, sc.tex_map);
+    glEnable(GL_TEXTURE_2D);
+    glPushMatrix();
+    glTranslatef(0,10,0);
+    glScalef(500,500,500);
+    draw_cube_map();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3f(0, 0.7, 1);
+    glTranslatef(-100, -19.3, -100);
+    glScalef(9,10,9.9);
+    Dessine_eau(20,20);
+    glPopMatrix();
+}
