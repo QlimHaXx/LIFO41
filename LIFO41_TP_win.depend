@@ -1,0 +1,133 @@
+# depslib dependency file v1.0
+1429776881 source:w:\lifo41_tp\image.cpp
+	<cstdlib>
+	<cassert>
+	<cstdio>
+	"Image.h"
+
+1427364149 w:\lifo41_tp\image.h
+
+1430391452 source:w:\lifo41_tp\scene.cpp
+	"Scene.h"
+	<time.h>
+	<GL/gl.h>
+	"opengl.h"
+
+1428575175 w:\lifo41_tp\scene.h
+	"Animation.h"
+	"Image.h"
+
+1427364147 w:\lifo41_tp\animation.h
+	"Vec3f.h"
+
+1427364147 w:\lifo41_tp\vec3f.h
+
+1427364156 w:\lifo41_tp\opengl.h
+	<GL/gl.h>
+	<GL/glu.h>
+	"glut-3.7.6-bin_win/glut.h"
+	<GL/glut.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
+1427364148 w:\lifo41_tp\glut-3.7.6-bin_win\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1427364147 source:w:\lifo41_tp\vec3f.cpp
+	"Vec3f.h"
+	<math.h>
+	<cstdio>
+
+1427364147 source:w:\lifo41_tp\opengl.cpp
+	"opengl.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"Vec3f.h"
+	"Image.h"
+	"Scene.h"
+	"Camera.h"
+	"Animation.h"
+
+1427364156 w:\lifo41_tp\camera.h
+	"Vec3f.h"
+
+1430390773 source:w:\lifo41_tp\animation.cpp
+	"opengl.h"
+	"Vec3f.h"
+	<time.h>
+	"Animation.h"
+	<cassert>
+
+1430394373 source:d:\documents\dev\lifo41_tp\animation.cpp
+	"opengl.h"
+	"Vec3f.h"
+	<time.h>
+	"Animation.h"
+	<cassert>
+
+1427364156 d:\documents\dev\lifo41_tp\opengl.h
+	<GL/gl.h>
+	<GL/glu.h>
+	"glut-3.7.6-bin_win/glut.h"
+	<GL/glut.h>
+	<GL/gl.h>
+	<GL/glu.h>
+	<unistd.h>
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+
+1427364148 d:\documents\dev\lifo41_tp\glut-3.7.6-bin_win\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1427364147 d:\documents\dev\lifo41_tp\vec3f.h
+
+1427364147 d:\documents\dev\lifo41_tp\animation.h
+	"Vec3f.h"
+
+1430487523 source:d:\documents\dev\lifo41_tp\image.cpp
+	<cstdlib>
+	<cassert>
+	<cstdio>
+	"Image.h"
+
+1427364149 d:\documents\dev\lifo41_tp\image.h
+
+1427364147 source:d:\documents\dev\lifo41_tp\opengl.cpp
+	"opengl.h"
+	<stdio.h>
+	<stdlib.h>
+	<math.h>
+	"Vec3f.h"
+	"Image.h"
+	"Scene.h"
+	"Camera.h"
+	"Animation.h"
+
+1430488161 d:\documents\dev\lifo41_tp\scene.h
+	"Animation.h"
+	"Image.h"
+
+1427364156 d:\documents\dev\lifo41_tp\camera.h
+	"Vec3f.h"
+
+1430497863 source:d:\documents\dev\lifo41_tp\scene.cpp
+	"Scene.h"
+	<time.h>
+	<GL/gl.h>
+	"opengl.h"
+
+1427364147 source:d:\documents\dev\lifo41_tp\vec3f.cpp
+	"Vec3f.h"
+	<math.h>
+	<cstdio>
+
