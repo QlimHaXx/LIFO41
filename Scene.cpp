@@ -1,12 +1,13 @@
 #include "Scene.h"
 #include <time.h>
+#include <math.h>
 #include <GL/gl.h>
 #include "opengl.h"
 
 void draw_axes()
 {
     glLineWidth(5);
-    glBegin( GL_LINES );
+    glBegin(GL_LINES);
 
     glColor3f( 1.f, 0.f, 0.f);
     glVertex3f( 0.f, 0.f, 0.f);
@@ -200,15 +201,15 @@ void draw_cone()
 
 void Normal(const Image& im, int i, int j)
 {
-    Vec3f G,D,H,B,GD,BH,N;
-    vecInit(G,i-1,getPix(im,i-1,j,0),j);
-    vecInit(D,i+1,getPix(im,i+1,j,0),j);
-    vecInit(B,i,getPix(im,i,j-1,0),j+1);
-    vecInit(H,i,getPix(im,i,j+1,0),j-1);
-    vecSub(GD,D,G);
-    vecSub(BH,H,B);
-    vecCross(N,GD,BH);
-    glNormal3f(N.x,N.y,N.z);
+    Vec3f G, D, H, B, GD, BH, N;
+    vecInit(G, i - 1, getPix(im, i - 1, j, 0), j);
+    vecInit(D, i + 1, getPix(im, i + 1, j, 0), j);
+    vecInit(B,i,getPix(im, i, j - 1, 0), j + 1);
+    vecInit(H,i,getPix(im, i, j + 1, 0),j - 1);
+    vecSub(GD, D, G);
+    vecSub(BH, H, B);
+    vecCross(N, GD, BH);
+    glNormal3f(N.x, N.y, N.z);
 }
 
 void draw_arbre (){
@@ -272,11 +273,11 @@ void dessin_foret(const Image &ter){
         for(j = 0; j < imGetDimY(ter) -1; j++){
             if((float(getPix(ter, i, j, 0)))/20 > 2 && (float(getPix(ter, i, j, 0)))/20 < 6)
             {
-                percent = rand()%100;
-                if(percent < 1){
+                percent = rand()%1000;
+                if(percent < 3){
                     glPushMatrix();
                     glTranslatef((float(i))/2, (float(getPix(ter, i, j, 0)))/20, (float(j))/2);
-                    glScalef(2,2,2);
+                    glScalef(4,4,4);
                     draw_arbre();
                     glPopMatrix();
                 }
@@ -385,20 +386,32 @@ void draw_fly ()
     draw_sphere();
     glPopMatrix();
 
+    glPushMatrix(); //réacteur droit
+    glTranslatef(4,1,0.375);
+    glScalef(0.25,1.5,0.3);
+    draw_sphere();
+    glPopMatrix();
+
     glPushMatrix(); //aile avant gauche
     glTranslatef(-2.4,1,0);
     glScalef(7,2,0.25);
     draw_cube();
     glPopMatrix();
 
-    glPushMatrix(); //réacteur gauche
+    glPushMatrix(); //réacteur gauche1
     glTranslatef(-2,1,0.375);
     glScalef(0.25,1.5,0.3);
     draw_sphere();
     glPopMatrix();
 
+    glPushMatrix(); //réacteur gauche2
+    glTranslatef(-4,1,0.375);
+    glScalef(0.25,1.5,0.3);
+    draw_sphere();
+    glPopMatrix();
+
     glPushMatrix(); //aileron
-    glTranslatef(0,-2.5,-1);
+    glTranslatef(0,-3.5,-0.9);
     glScalef(0.2,0.8,0.7);
     glRotatef(-15,1,0,0);
     draw_cube();
@@ -422,17 +435,17 @@ void draw_fly ()
 
 Vec3f calcul_pos(const Animation & ani, float t)
 {
-    glPushMatrix();
+    Vec3f P;
     int te = t;
     float r = t - te;
     int tes = te + 1;
+
     te = te % ani.nbp;
     tes = tes % ani.nbp;
-    Vec3f P;
-    P.x = r * ani.P[tes].x + (1-r) * ani.P[tes].x;
-    P.y = r * ani.P[tes].y + (1-r) * ani.P[tes].y;
-    P.z = r * ani.P[tes].z + (1-r) * ani.P[tes].z;
-    glPopMatrix();
+
+    P.x = r * ani.P[tes].x + (1 - r) * ani.P[te].x;
+    P.y = r * ani.P[tes].y + (1 - r) * ani.P[te].y;
+    P.z = r * ani.P[tes].z + (1 - r) * ani.P[te].z;
     return P;
 }
 
@@ -450,7 +463,6 @@ void draw_animfly (const Animation & ani)
     vecSub(DIR, PF, P);
     glPushMatrix();
     glTranslatef(P.x, P.y, P.z);
-    glRotatef(-t * 5, 0, P.y, 0);
     vecNormalize(DIR);
     a = acos(vecDot(X, DIR));
 
@@ -458,7 +470,7 @@ void draw_animfly (const Animation & ani)
         a = -a;
     }
 
-    glRotatef(a,0,1,0);
+    glRotatef(a * 2 * t,0,1,0);
     glRotatef(90,1,0,0);
     glRotatef(-90,0,0,1);
     glScalef(0.8,0.8,0.8);
@@ -472,7 +484,7 @@ float alti(int i, int j, float t, int gx, int gz)
     float d, z; // d distance entre le point qu'on est en train d'afficher et la goutte
 
     d = sqrt((gx - i) * (gx - i) + (gz - j) * (gz - j));
-    z = (cos(i * d + t) * 1)/(d + 1); //z : distance entre train de vague et 5 : hauteur de +5. On peut rajouter coeff * devant d pour accélerer la vitesse
+    z = (cos(i * d + t) * 1)/ 15; //z : distance entre train de vague et 5 : hauteur de +5. On peut rajouter coeff * devant d pour accélerer la vitesse
 
     return z;
 }
@@ -486,13 +498,106 @@ void Dessine_eau(int DX, int DY) //copier normal du terrain et remplacer avec al
         glBegin(GL_QUAD_STRIP);
         for(j = 0;j <= DY; j++)
         {
-            glNormal3f(0,1,0);
-            glVertex3f(i,alti(i,j,t,DX,DY),j);
-            glNormal3f(0,1,0);
-            glVertex3f(i + 1, alti(i + 1,j, t, DX, DY), j);
+            glNormal3f(0, ((float)(alti(i, j, t, DX, DY))/2), 0);
+            glVertex3f(i,alti(i, j, t, DX, DY),j);
+            glNormal3f(0, ((float)(alti(i + 1, j, t, DX, DY))/2), 0);
+            glVertex3f(i + 1, alti(i + 1, j, t, DX, DY), j);
         }
         glEnd();
     }
+}
+
+void Dessine_Oiseaux()
+{
+    float t = temps();
+
+    glPushMatrix();
+    glRotatef(15 * cos(10 * t), 0, 0, 1);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.5, 1); //A
+    glVertex3f(0, 0, 1.2); //A
+    glTexCoord2f(0.5, 0); //B
+    glVertex3f(0, 0, 0); //B
+    glTexCoord2f(0.75, 0); //C
+    glVertex3f(1, 0, 0); //C
+    glTexCoord2f(0.75, 1); //D
+    glVertex3f(1, 0, 1.2); //D
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.96, cos(t*10)/3.85, 0);
+    glRotatef(35 * cos(10 * t), 0, 0, 1);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.75, 1); //C
+    glVertex3f(0, 0, 1.2); //C
+    glTexCoord2f(0.75, 0); //D
+    glVertex3f(0, 0, 0); //D
+    glTexCoord2f(1, 0); //E
+    glVertex3f(1, 0, 0); //E
+    glTexCoord2f(1, 1); //F
+    glVertex3f(1, 0, 1.2); //F
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glRotatef(-15 * cos(10 * t),0,0,1);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.5, 0); //G
+    glVertex3f(0, 0, 0); //A
+    glTexCoord2f(0.5, 1); //H
+    glVertex3f(0, 0, 1.2); //B
+    glTexCoord2f(0.25, 1); //B
+    glVertex3f(-1, 0, 1.2); //G
+    glTexCoord2f(0.25, 0); //A
+    glVertex3f(-1, 0, 0); //H
+    glEnd();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-0.96, cos(t*10)/3.85, 0);
+    glRotatef(-35 * cos(10 * t), 0, 0, 1);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.25, 0); //G
+    glVertex3f(0, 0, 0); //G
+    glTexCoord2f(0.25, 1); //I
+    glVertex3f(0, 0, 1.2); //H
+    glTexCoord2f(0, 1); //H
+    glVertex3f(-1, 0, 1.2); //I
+    glTexCoord2f(0, 0); //J
+    glVertex3f(-1, 0, 0); //J
+    glEnd();
+    glPopMatrix();
+
+}
+
+void draw_animBird (const Animation & ani)
+{
+    Vec3f P, X;
+    Vec3f PF, DIR;
+    float t;
+    float a;
+
+    t = temps();
+    P = calcul_pos(ani, t);
+    PF = calcul_pos(ani, t + 1);
+    vecInit(X, 1, 0, 0); /* crée le vecteur X = (1,0,0) */
+    vecSub(DIR, PF, P); /* crée le vecteur DIR = PF - p */
+    vecNormalize(DIR); /* Normalise le vecteur DIR */
+    a = acos(vecDot(X, DIR)); /* calcule l'angle entre le vecteur X et DIR */
+    a = 180 * a / M_PI;
+
+    if (DIR.z > 0){
+        a = -a;
+    }
+
+    glPushMatrix();
+    glTranslatef(P.x, P.y, P.z);
+    glRotatef(90,0,1,0);
+    glRotatef(a,0,1,0);
+    Dessine_Oiseaux();
+    glPopMatrix();
+
 }
 
 void sceneInit(Scene& sc)
@@ -501,6 +606,7 @@ void sceneInit(Scene& sc)
     sc.tex_arbre = LoadGLTexture("data/billboard/arbre.ppm", true, 100, 100, 100, LOADGLTEX_GREATER);
     sc.tex_terrain = LoadGLTexture("data/terrain/terrain_new.ppm", false, 255, 255, 255, LOADGLTEX_GREATER);
     sc.tex_map = LoadGLTexture("data/cubemap/skybox_big.ppm", false, 255, 255, 255, LOADGLTEX_GREATER);
+    sc.tex_aigle = LoadGLTexture("data/aigle.ppm", true, 220, 220, 220, LOADGLTEX_GREATER);
     imInitPPM(sc.terrain, "data/terrain/terrain_new_h.ppm");
 }
 
@@ -508,17 +614,22 @@ void sceneDraw(const Scene& sc)
 {
     srand(14);
 
-    glDisable(GL_TEXTURE_2D);
+    /*glDisable(GL_TEXTURE_2D);
     glPushMatrix();
     draw_animfly(sc.anim);
-    glPopMatrix();
+    glPopMatrix();*/
+
+    glBindTexture( GL_TEXTURE_2D, sc.tex_aigle);
+    glEnable(GL_TEXTURE_2D);
+    draw_animBird(sc.anim);
+    glDisable(GL_TEXTURE_2D);
 
     glBindTexture( GL_TEXTURE_2D, sc.tex_terrain);
     glEnable(GL_TEXTURE_2D);
     glPushMatrix();
     DessineTerrain(sc.terrain);
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-
 
     glBindTexture( GL_TEXTURE_2D, sc.tex_arbre);
     glEnable(GL_TEXTURE_2D);
@@ -526,6 +637,7 @@ void sceneDraw(const Scene& sc)
     glTranslatef(-100,-20,-100);
     glScalef(2, 2, 2);
     dessin_foret(sc.terrain);
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
     glBindTexture( GL_TEXTURE_2D, sc.tex_map);
@@ -534,12 +646,20 @@ void sceneDraw(const Scene& sc)
     glTranslatef(0,10,0);
     glScalef(500,500,500);
     draw_cube_map();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
+    /*glBindTexture( GL_TEXTURE_2D, sc.tex_aigle);
+    glEnable(GL_TEXTURE_2D);
     glPushMatrix();
-    glColor3f(0, 0.7, 1);
-    glTranslatef(-100, -19.3, -100);
-    glScalef(9,10,9.9);
-    Dessine_eau(20,20);
+    Dessine_Oiseaux();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();*/
+
+    glPushMatrix();
+    glColor4ub(50, 150, 255, 100);
+    glTranslatef(-100, -19.5, -100);
+    glScalef(9,5,9.9);
+    Dessine_eau(20, 20);
     glPopMatrix();
 }

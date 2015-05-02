@@ -65,7 +65,7 @@
 	"Animation.h"
 	<cassert>
 
-1430394373 source:d:\documents\dev\lifo41_tp\animation.cpp
+1430505976 source:d:\documents\dev\lifo41_tp\animation.cpp
 	"opengl.h"
 	"Vec3f.h"
 	<time.h>
@@ -113,16 +113,17 @@
 	"Camera.h"
 	"Animation.h"
 
-1430488161 d:\documents\dev\lifo41_tp\scene.h
+1430580924 d:\documents\dev\lifo41_tp\scene.h
 	"Animation.h"
 	"Image.h"
 
 1427364156 d:\documents\dev\lifo41_tp\camera.h
 	"Vec3f.h"
 
-1430497863 source:d:\documents\dev\lifo41_tp\scene.cpp
+1430593492 source:d:\documents\dev\lifo41_tp\scene.cpp
 	"Scene.h"
 	<time.h>
+	<math.h>
 	<GL/gl.h>
 	"opengl.h"
 

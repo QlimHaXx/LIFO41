@@ -15,6 +15,7 @@ struct Scene
 	unsigned int tex_terrain;
 	unsigned int tex_arbre;
 	unsigned int tex_map;
+	unsigned int tex_aigle;
 };
 
 
