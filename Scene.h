@@ -9,6 +9,9 @@
 struct Scene
 {
     Animation anim;
+    Animation anim_oiseaux1;
+    Animation anim_oiseaux2;
+    Animation anim_avion;
 
 
 	Image terrain;

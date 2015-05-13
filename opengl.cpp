@@ -55,7 +55,7 @@ void help()
     printf("   i : reinitialise la camera\n");
     printf("\n");
     printf("Lumiere : \n");
-    printf("    alt+fleches ou pageup,pagedown : bouge la mumière\n");
+    printf("    alt+fleches ou pageup,pagedown : bouge la lumière\n");
     printf("\n");
     printf("Touches : \n");
     printf("   a : dessine les axes\n");

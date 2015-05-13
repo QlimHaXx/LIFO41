@@ -4,8 +4,7 @@
 #include <GL/gl.h>
 #include "opengl.h"
 
-void draw_axes()
-{
+void draw_axes(){
     glLineWidth(5);
     glBegin(GL_LINES);
 
@@ -24,8 +23,7 @@ void draw_axes()
     glEnd();
 }
 
-void draw_grid()
-{
+void draw_grid(){
     int i;
     glLineWidth(1);
     glColor3f( 1.f, 1.f, 1.f);
@@ -51,8 +49,7 @@ void draw_grid()
     glPopMatrix();
 }
 
-void draw_cube()
-{
+void draw_cube(){
     static float pt[8][3] = { {0,0,0}, {1,0,0}, {1,0,1}, {0,0,1}, {0,1,0}, {1,1,0}, {1,1,1}, {0,1,1} };
     static int f[6][4] = { {0,1,2,3}, {5,4,7,6}, {1,5,6,2}, {0,3,7,4}, {3,2,6,7}, {0,4,5,1} };
     static float n[6][3] = { {0,-1,0}, {0,1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
@@ -78,8 +75,7 @@ void draw_cube()
     glEnd();
 }
 
-void draw_cube_map()
-{
+void draw_cube_map(){
     static float pt[8][3] = { {0,0,0}, {1,0,0}, {1,0,1}, {0,0,1}, {0,1,0}, {1,1,0}, {1,1,1}, {0,1,1} };
     static int f[6][4] = { {0,1,2,3}, {5,4,7,6}, {1,5,6,2}, {0,3,7,4}, {3,2,6,7}, {0,4,5,1} };
     static float n[6][3] = { {0,-1,0}, {0,1,0}, {1,0,0}, {-1,0,0}, {0,0,1}, {0,0,-1} };
@@ -105,8 +101,7 @@ void draw_cube_map()
     glEnd();
 }
 
-void draw_sphere()
-{
+void draw_sphere(){
     int i,j;
     float a,a2,b;
     int N = 20;
@@ -128,49 +123,47 @@ void draw_sphere()
 
 }
 
-void draw_cylinder()
-{
+void draw_cylinder(){
     int i;
 
     glBegin(GL_TRIANGLE_STRIP);
-    int N=20;
+    int N = 20;
     float a;
-    for(i=0;i<=N;i++)
+    for(i = 0; i <= N; i++)
     {
-        a=2.0*i*M_PI/N;
-        glNormal3f(cos(a),0,sin(a));
-        glVertex3f(cos(a),0,sin(a));
-        glNormal3f(cos(a),0,sin(a));
-        glVertex3f(cos(a),1,sin(a));
+        a = 2.0 * i * M_PI / N;
+        glNormal3f(cos(a), 0, sin(a));
+        glVertex3f(cos(a), 0, sin(a));
+        glNormal3f(cos(a), 0, sin(a));
+        glVertex3f(cos(a), 1, sin(a));
     }
     glEnd();
 
     glBegin(GL_TRIANGLE_FAN);
-    glNormal3f(0,1,0);
-    glVertex3f(0,1,0);
-    for(i=0;i<=N;i++)
+    glNormal3f(0, 1, 0);
+    glVertex3f(0, 1, 0);
+    for(i = 0; i <= N; i++)
     {
-        a=2.0*i*M_PI/N;
-        glNormal3f(0,1,0);
-        glVertex3f(cos(a),1,sin(a));
+        a = 2.0 * i * M_PI / N;
+        glNormal3f(0, 1, 0);
+        glVertex3f(cos(a), 1, sin(a));
     }
     glEnd();
 
     glBegin(GL_TRIANGLE_FAN);
-    glNormal3f(0,-1,0);
-    glVertex3f(0,0,0);
-    for(i=0;i<=N;i++)
+    glNormal3f(0, -1, 0);
+    glVertex3f(0, 0, 0);
+    for(i = 0; i <= N; i++)
     {
-        a=2.0*i*M_PI/N;
-        glNormal3f(0,-1,0);
-        glVertex3f(cos(a),0,sin(a));
+        a = 2.0 * i * M_PI / N;
+        glNormal3f(0, -1, 0);
+        glVertex3f(cos(a), 0, sin(a));
     }
     glEnd();
 
 }
 
-void draw_cone()
-{
+void draw_cone(){
     int i;
 
     glBegin(GL_TRIANGLES);
@@ -199,8 +192,7 @@ void draw_cone()
 
 }
 
-void Normal(const Image& im, int i, int j)
-{
+void Normal(const Image& im, int i, int j){
     Vec3f G, D, H, B, GD, BH, N;
     vecInit(G, i - 1, getPix(im, i - 1, j, 0), j);
     vecInit(D, i + 1, getPix(im, i + 1, j, 0), j);
@@ -242,8 +234,7 @@ void draw_arbre (){
     glPopMatrix();
 }
 
-void DessineTerrain(const Image &ter)
-{
+void DessineTerrain(const Image &ter){
     int i, j;
     glPushMatrix();
     glScalef(1,0.1,1);
@@ -366,8 +357,7 @@ void draw_voiture(){
     glPopMatrix();
 }
 
-void draw_fly ()
-{
+void draw_fly(){
     glPushMatrix(); //tronc
     glTranslatef(0,0.5,0);
     glScalef(1,5,1);
@@ -430,11 +420,9 @@ void draw_fly ()
     glRotatef(0,1,0,0);
     draw_cube();
     glPopMatrix();
-
 }
 
-Vec3f calcul_pos(const Animation & ani, float t)
-{
+Vec3f calcul_pos(const Animation & ani, float t){
     Vec3f P;
     int te = t;
     float r = t - te;
@@ -449,42 +437,48 @@ Vec3f calcul_pos(const Animation & ani, float t)
     return P;
 }
 
-void draw_animfly (const Animation & ani)
-{
-    Vec3f P, X;
+void draw_animfly (const Animation & ani){
+    Vec3f P, X, Z;
     Vec3f PF, DIR;
     float t;
-    float a;
+    float aX;
+    float aZ;
 
     t = temps();
     P = calcul_pos(ani, t);
     PF = calcul_pos(ani, t + 1);
-    vecInit(X,1,0,0);
-    vecSub(DIR, PF, P);
-    glPushMatrix();
-    glTranslatef(P.x, P.y, P.z);
-    vecNormalize(DIR);
-    a = acos(vecDot(X, DIR));
+    vecInit(X, 1, 0, 0); /* crée le vecteur X = (1,0,0) */
+    vecInit(Z, 0, 0, 1); /* crée le vecteur Y = (0,1,0) */
+    vecSub(DIR, PF, P); /* crée le vecteur DIR = PF - p */
+    vecNormalize(DIR); /* Normalise le vecteur DIR */
+    aX = acos(vecDot(X, DIR)); /* calcule l'angle entre le vecteur X et DIR */
+    aX = 180 * aX / M_PI;
+    aZ = acos(vecDot(Z, DIR)); /* calcule l'angle entre le vecteur Y et DIR */
+    aZ = 10 * aZ / M_PI;
 
     if (DIR.z > 0){
-        a = -a;
+        aX = -aX;
     }
 
-    glRotatef(a * 2 * t,0,1,0);
-    glRotatef(90,1,0,0);
-    glRotatef(-90,0,0,1);
-    glScalef(0.8,0.8,0.8);
-    glColor3f(1, 1, 1);
+    if (DIR.y < 0){
+        aZ = -aZ;
+    }
+
+    glPushMatrix();
+    glTranslatef(P.x, P.y, P.z);
+    glRotatef(aX,0,1,0);
+    glRotatef(aZ,0,0,1);
+    glRotatef(90, 1, 0, 0);
+    glRotatef(-90, 0, 0, 1);
     draw_fly();
     glPopMatrix();
 }
 
-float alti(int i, int j, float t, int gx, int gz)
-{
+float alti(int i, int j, float t, int gx, int gz){
     float d, z; // d distance entre le point qu'on est en train d'afficher et la goutte
 
     d = sqrt((gx - i) * (gx - i) + (gz - j) * (gz - j));
-    z = (cos(i * d + t) * 1)/ 15; //z : distance entre train de vague et 5 : hauteur de +5. On peut rajouter coeff * devant d pour accélerer la vitesse
+    z = (cos(i * d * 20 + t) * 1) / 10; //z : distance entre train de vague et 5 : hauteur de +5. On peut rajouter coeff * devant d pour accélerer la vitesse
 
     return z;
 }
@@ -493,10 +487,10 @@ void Dessine_eau(int DX, int DY) //copier normal du terrain et remplacer avec al
 {
     float t = temps();
     int i,j;
-    for(i = 0;i <= DX; i++)
+    for(i = 0;i <= DX * 2; i++)
     {
         glBegin(GL_QUAD_STRIP);
-        for(j = 0;j <= DY; j++)
+        for(j = 0;j <= DY * 2; j++)
         {
             glNormal3f(0, ((float)(alti(i, j, t, DX, DY))/2), 0);
             glVertex3f(i,alti(i, j, t, DX, DY),j);
@@ -507,8 +501,7 @@ void Dessine_eau(int DX, int DY) //copier normal du terrain et remplacer avec al
     }
 }
 
-void Dessine_Oiseaux()
-{
+void Dessine_Oiseaux(){
     float t = temps();
 
     glPushMatrix();
@@ -571,57 +564,154 @@ void Dessine_Oiseaux()
 
 }
 
-void draw_animBird (const Animation & ani)
-{
-    Vec3f P, X;
+void draw_animBird (const Animation & ani){
+    Vec3f P, X, Z;
     Vec3f PF, DIR;
     float t;
-    float a;
+    float aX;
+    float aZ;
 
     t = temps();
     P = calcul_pos(ani, t);
     PF = calcul_pos(ani, t + 1);
     vecInit(X, 1, 0, 0); /* crée le vecteur X = (1,0,0) */
+    vecInit(Z, 0, 0, 1); /* crée le vecteur Y = (0,1,0) */
     vecSub(DIR, PF, P); /* crée le vecteur DIR = PF - p */
     vecNormalize(DIR); /* Normalise le vecteur DIR */
-    a = acos(vecDot(X, DIR)); /* calcule l'angle entre le vecteur X et DIR */
-    a = 180 * a / M_PI;
+    aX = acos(vecDot(X, DIR)); /* calcule l'angle entre le vecteur X et DIR */
+    aX = 180 * aX / M_PI;
+    aZ = acos(vecDot(Z, DIR)); /* calcule l'angle entre le vecteur Y et DIR */
+    aZ = 45 * aZ / M_PI;
 
     if (DIR.z > 0){
-        a = -a;
+        aX = -aX;
+    }
+
+    if (DIR.x > 0){
+        aZ = -aZ;
     }
 
     glPushMatrix();
     glTranslatef(P.x, P.y, P.z);
-    glRotatef(90,0,1,0);
-    glRotatef(a,0,1,0);
+    glRotatef(90, 0, 1, 0);
+    glRotatef(aX,0,1,0);
+    glRotatef(aZ,0,0,1);
+    Dessine_Oiseaux();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(P.x + 60, P.y + 10, P.z - 40);
+    glRotatef(90, 0, 1, 0);
+    glRotatef(aX,0,1,0);
+    glRotatef(aZ,0,0,1);
+    Dessine_Oiseaux();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(P.x + 20, P.y + 20, P.z + 40);
+    glRotatef(90, 0, 1, 0);
+    glRotatef(aX,0,1,0);
+    glRotatef(aZ,0,0,1);
     Dessine_Oiseaux();
     glPopMatrix();
 
 }
 
-void sceneInit(Scene& sc)
+Vec3f RotY (const Vec3f & P, float a){
+    Vec3f R;
+
+    R.x = P.x * cos(a) - P.z * sin(a);
+    R.z = P.x * sin(a) + P.z * cos(a);
+
+    return R;
+}
+
+void Dessine_Vase(){
+    const int N = 10; //nombre d'étages
+    Vec3f P[N] = {{0,0,0},{1,1,0},{2,1.5,0},{3,2,0},{4,2.5,0},{5,3,0},{4,3.5,0},{3,4,0},{2,4.5,0},{3,5,0}}; /* forme a copier */
+    Vec3f R;
+    int i, j;
+    float a, a2;
+
+    for(i = 0; i < 20; i++)
+    {
+        a = 2 * M_PI * i / 20;
+        glBegin(GL_QUADS);
+
+        for(j = 0; j < N - 1; j++) //RotY([3],a);
+        {
+            a2 = 2 * M_PI * j / N;
+            R = RotY(P[j], a);
+            glVertex3f(R.x, R.y, R.z);
+            R = RotY(P[j], a2);
+            glVertex3f(R.x, R.y, R.z);
+            R = RotY(P[j + 1], a2);
+            glVertex3f(R.x, R.y, R.z);
+            R = RotY(P[j + 1], a);
+            glVertex3f(R.x, R.y, R.z);
+        }
+        glEnd();
+    }
+}
+
+void Dessine_Arbre(int p)
 {
-    animInit(sc.anim, "data/anim1.ani");
+    int a, i, nb;
+
+    if(p < 0) return;
+
+    glScalef(1, 0.3 * p, 1);
+    draw_cylinder();
+    glPushMatrix();
+
+    nb = 1 + rand()%3;
+
+    for(i = 0; i < nb; i++){
+        a = 20 + rand() % 20;
+        glRotatef(360 / nb, 0, 1, 0);
+        glRotatef(a, 0, 0, 1);
+    }
+
+    glTranslatef(0, 0.3 * p, 0);
+    glScalef(0.1 * p, 0.4 * p, 0.1 * p);
+    Dessine_Arbre(p - 1);
+    glPopMatrix();
+}
+
+void sceneInit(Scene& sc){
+    animInit(sc.anim_oiseaux1, "data/anim_oiseaux_1.ani");
+    animInit(sc.anim_oiseaux2, "data/anim_oiseaux_2.ani");
+    animInit(sc.anim_avion, "data/anim_avion.ani");
     sc.tex_arbre = LoadGLTexture("data/billboard/arbre.ppm", true, 100, 100, 100, LOADGLTEX_GREATER);
     sc.tex_terrain = LoadGLTexture("data/terrain/terrain_new.ppm", false, 255, 255, 255, LOADGLTEX_GREATER);
     sc.tex_map = LoadGLTexture("data/cubemap/skybox_big.ppm", false, 255, 255, 255, LOADGLTEX_GREATER);
     sc.tex_aigle = LoadGLTexture("data/aigle.ppm", true, 220, 220, 220, LOADGLTEX_GREATER);
     imInitPPM(sc.terrain, "data/terrain/terrain_new_h.ppm");
+
 }
 
-void sceneDraw(const Scene& sc)
-{
+void sceneDraw(const Scene& sc){
+
     srand(14);
 
-    /*glDisable(GL_TEXTURE_2D);
+    glDisable(GL_TEXTURE_2D);
     glPushMatrix();
-    draw_animfly(sc.anim);
-    glPopMatrix();*/
+    Dessine_Arbre(5);
+    glPopMatrix();
+
+    glDisable(GL_TEXTURE_2D);
+    glPushMatrix();
+    draw_animfly(sc.anim_avion);
+    glPopMatrix();
 
     glBindTexture( GL_TEXTURE_2D, sc.tex_aigle);
     glEnable(GL_TEXTURE_2D);
-    draw_animBird(sc.anim);
+    draw_animBird(sc.anim_oiseaux1);
+    glDisable(GL_TEXTURE_2D);
+
+    glBindTexture( GL_TEXTURE_2D, sc.tex_aigle);
+    glEnable(GL_TEXTURE_2D);
+    draw_animBird(sc.anim_oiseaux2);
     glDisable(GL_TEXTURE_2D);
 
     glBindTexture( GL_TEXTURE_2D, sc.tex_terrain);
@@ -649,17 +739,59 @@ void sceneDraw(const Scene& sc)
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
-    /*glBindTexture( GL_TEXTURE_2D, sc.tex_aigle);
-    glEnable(GL_TEXTURE_2D);
-    glPushMatrix();
-    Dessine_Oiseaux();
-    glDisable(GL_TEXTURE_2D);
-    glPopMatrix();*/
-
     glPushMatrix();
     glColor4ub(50, 150, 255, 100);
-    glTranslatef(-100, -19.5, -100);
-    glScalef(9,5,9.9);
+    glTranslatef(-100, -19.2, -100);
+    glScalef(4.84,5,4.95);
     Dessine_eau(20, 20);
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3ub(51,38,21);
+    glTranslatef(-59,-18.5,10);
+    glScalef(5,3.5,3.5);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3ub(51,38,21);
+    glTranslatef(-65,-18,12);
+    glScalef(3.2,3,3);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3ub(51,38,21);
+    glTranslatef(-59,-18.5,4);
+    glScalef(5,3.5,3.5);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3ub(51,38,21);
+    glTranslatef(-65,-17,5);
+    glScalef(3.2,3,3);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3ub(51,38,21);
+    glTranslatef(-59,-18.5,0);
+    glScalef(3,2.5,2.5);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3ub(51,38,21);
+    glTranslatef(-63,-18.5,0);
+    glScalef(3,2.5,2.5);
+    draw_sphere();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3ub(51,38,21);
+    glTranslatef(-60,-18,-3);
+    glScalef(3.2,3,3);
+    draw_sphere();
     glPopMatrix();
 }
